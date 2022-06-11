@@ -1,5 +1,6 @@
 package com.sparta.week6project.model;
 
+import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,5 +21,10 @@ public class Tag {
 
     @Column(nullable = false)
     private String tag;
+
+    public Tag(Post post, TagRequestDto tagRequestDto){
+        this.post = post;
+        this.tag = tagRequestDto.getTag();
+    }
 
 }
