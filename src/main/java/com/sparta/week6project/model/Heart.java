@@ -23,6 +23,15 @@ public class Heart {
     private User user;
 
     @Column(nullable = false)
-    private boolean isheart;
+    private boolean isheart = false;
 
+    public Heart(Post post, User user) {
+        this.post = post;
+        this.user = user;
+        setIsheart();
+    }
+
+    public void setIsheart() {
+        this.isheart = !this.isheart;
+    }
 }
