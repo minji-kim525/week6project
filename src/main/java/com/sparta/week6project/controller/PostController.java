@@ -3,7 +3,9 @@ package com.sparta.week6project.controller;
 import com.sparta.week6project.dto.requestDto.PostRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
 import com.sparta.week6project.service.PostService;
+import com.sparta.week6project.service.S3Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,9 +13,11 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final S3Service s3Service;
 
-    public PostController(PostService postService){
+    public PostController(PostService postService, S3Service s3Service){
         this.postService = postService;
+        this.s3Service = s3Service;
     }
     public Long userId = 1L;
 
@@ -57,5 +61,11 @@ public class PostController {
     }
 
 
+    // 파일 업로드 테스트
+    @PostMapping("/upload")
+    public String upload(@RequestPart("file") MultipartFile file){
+        System.out.println(file);
+        return s3Service.upload(file);
+    }
 
 }
