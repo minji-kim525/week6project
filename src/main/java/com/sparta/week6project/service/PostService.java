@@ -3,7 +3,6 @@ package com.sparta.week6project.service;
 import com.sparta.week6project.dto.requestDto.PostRequestDto;
 import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
-import com.sparta.week6project.dto.responseDto.TagResponseDto;
 import com.sparta.week6project.model.Post;
 import com.sparta.week6project.model.Tag;
 import com.sparta.week6project.model.User;
@@ -11,6 +10,7 @@ import com.sparta.week6project.repository.HeartRepository;
 import com.sparta.week6project.repository.PostRepository;
 import com.sparta.week6project.repository.TagRepository;
 import com.sparta.week6project.repository.UserRepository;
+import com.sparta.week6project.repository.mapping.TagMapping;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -54,7 +54,7 @@ public class PostService {
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
 
         for(Post post : posts){
-            List<Tag> tags = tagRepository.findAllByPostId(post.getId());
+            List<TagMapping> tags = tagRepository.findAllByPostId(post.getId());
             PostResponseDto postResponseDto = PostResponseDto.builder()
                     .nickname(post.getUser().getNickname())
                     .title(post.getTitle())
@@ -63,8 +63,8 @@ public class PostService {
                     .modifiedAt(post.getModifiedAt())
                     .heart(heartRepository.countByPostId(post.getId()))
                     .isHeart(heartRepository.existsByPostIdAndUserId(post.getId(),userId))
+//                    .tags(tags)
                     .tags(tags)
-//                    .tags(new TagResponseDto(tags))
                     .build();
             postResponseDtos.add(postResponseDto);
         }
@@ -78,7 +78,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 ()-> new NullPointerException("해당 글을 찾을 수 없습니다.")
         );
-        List<Tag> tags = tagRepository.findAllByPostId(post.getId());
+        List<TagMapping> tags = tagRepository.findAllByPostId(post.getId());
         return PostResponseDto.builder()
                 .nickname(post.getUser().getNickname())
                 .title(post.getTitle())
@@ -88,7 +88,6 @@ public class PostService {
                 .heart(heartRepository.countByPostId(post.getId()))
                 .isHeart(heartRepository.existsByPostIdAndUserId(post.getId(),userId))
                 .tags(tags)
-//                    .tags(new TagResponseDto(tags))
                 .build();
     }
 

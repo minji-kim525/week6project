@@ -1,6 +1,7 @@
 package com.sparta.week6project.dto.responseDto;
 
 import com.sparta.week6project.model.Tag;
+import com.sparta.week6project.repository.mapping.TagMapping;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,7 +19,7 @@ public class PostResponseDto {
     private LocalDateTime modifiedAt;
     private Long heart;
     private Boolean isHeart;
-//    private List<TagResponseDto> tags;
-    private List<Tag> tags;
+//    private List<TagDto> tags;
+    private List<TagMapping> tags;
 
 }
