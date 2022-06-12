@@ -1,5 +1,6 @@
 package com.sparta.week6project.model;
 
+import com.sparta.week6project.dto.requestDto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,9 @@ public class Comment extends Timestamped{
     private String content;
 
 
+    public Comment(Post post, CommentRequestDto requestDto, User user) {
+        this.post = post;
+        this.user = user;
+        this.content = requestDto.getContents();
+    }
 }
