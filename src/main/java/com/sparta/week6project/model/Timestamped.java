@@ -1,5 +1,6 @@
 package com.sparta.week6project.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,10 +14,11 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Timestamped {      // 왜 추상화를 했는가?
-
+    @JsonFormat(pattern ="YYYY-MM-DD")
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @JsonFormat(pattern ="YYYY-MM-DD")
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
