@@ -1,6 +1,5 @@
 package com.sparta.week6project.dto.responseDto;
 
-import com.sparta.week6project.model.Tag;
 import com.sparta.week6project.repository.mapping.TagMapping;
 import lombok.Builder;
 import lombok.Getter;
