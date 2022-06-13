@@ -1,5 +1,6 @@
 package com.sparta.week6project.controller;
 
+import com.sparta.week6project.dto.requestDto.DuplicationRequestDto;
 import com.sparta.week6project.dto.requestDto.LoginRequestDto;
 import com.sparta.week6project.dto.requestDto.SignUpRequestDto;
 import com.sparta.week6project.dto.responseDto.LoginResponseDto;
@@ -35,10 +36,10 @@ public class UserController {
     //HttpServletResponse response
     //response.addHeader("X-AUTH-TOKEN", loginResponseDto.getToken());
 
-//    @PostMapping("/user/signup/duplicate")
-//    public ResponseEntity<DuplicationCheckDto.DuplicationResponseDto> duplicationCheck(DuplicationCheckDto duplicationCheckDto){
-//        return userService.duplicationCheck(duplicationCheckDto);
-//    }
+    @PostMapping("/user/signup/duplicate")
+    public ResponseEntity<DuplicationRequestDto.DuplicationResponseDto> duplicationCheck(DuplicationRequestDto duplicationCheckDto){
+        return userService.duplicationCheck(duplicationCheckDto);
+    }
 
     @GetMapping("/user/logout")
     public void logoutUser(){
