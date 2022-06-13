@@ -3,6 +3,7 @@ package com.sparta.week6project.service;
 import com.sparta.week6project.dto.requestDto.PostRequestDto;
 import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
+import com.sparta.week6project.model.Heart;
 import com.sparta.week6project.model.Post;
 import com.sparta.week6project.model.Tag;
 import com.sparta.week6project.model.User;
@@ -54,21 +55,8 @@ public class PostService {
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
 
         for(Post post : posts){
-            List<TagMapping> tags = tagRepository.findAllByPostId(post.getId());
-            PostResponseDto postResponseDto = PostResponseDto.builder()
-                    .nickname(post.getUser().getNickname())
-                    .title(post.getTitle())
-                    .contents(post.getContent())
-                    .imageUrl(post.getImageUrl())
-                    .modifiedAt(post.getModifiedAt())
-                    .heart(heartRepository.countByPostId(post.getId()))
-                    .isHeart(heartRepository.existsByPostIdAndUserId(post.getId(),userId))
-//                    .tags(tags)
-                    .tags(tags)
-                    .build();
-            postResponseDtos.add(postResponseDto);
+            postResponseDtos.add(postResMapping(post, userId));
         }
-
         return postResponseDtos;
     }
 
@@ -78,17 +66,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 ()-> new NullPointerException("해당 글을 찾을 수 없습니다.")
         );
-        List<TagMapping> tags = tagRepository.findAllByPostId(post.getId());
-        return PostResponseDto.builder()
-                .nickname(post.getUser().getNickname())
-                .title(post.getTitle())
-                .contents(post.getContent())
-                .imageUrl(post.getImageUrl())
-                .modifiedAt(post.getModifiedAt())
-                .heart(heartRepository.countByPostId(post.getId()))
-                .isHeart(heartRepository.existsByPostIdAndUserId(post.getId(),userId))
-                .tags(tags)
-                .build();
+        return postResMapping(post, userId);
     }
 
 
@@ -123,6 +101,20 @@ public class PostService {
 
         postRepository.deleteById(postId);
 
+    }
+
+    private PostResponseDto postResMapping(Post post, Long userId){
+        Heart heart = heartRepository.findByPostIdAndUserId(post.getId(), userId);
+        return PostResponseDto.builder()
+                .nickname(post.getUser().getNickname())
+                .title(post.getTitle())
+                .contents(post.getContent())
+                .imageUrl(post.getImageUrl())
+                .modifiedAt(post.getModifiedAt())
+                .heart(heartRepository.countByPostId(post.getId()))
+                .isHeart(heart != null && heart.getIsheart())
+                .tags(tagRepository.findAllByPostId(post.getId()))
+                .build();
     }
 
 
