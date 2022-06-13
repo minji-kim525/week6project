@@ -40,10 +40,11 @@ public class JwtTokenProvider {
 //        claims.put("nickname", nickname);
         Date now = new Date();
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
+                .setClaims(claims)//정보저장
+                .setIssuedAt(now)//토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + tokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretKey)//사용할 암호화 알고리즘
+                //signature에 들어갈 secret값 세팅
                 .compact();
     }
 
@@ -58,6 +59,8 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    //Request의 Header에서 token 값을 가져옴
+    //"X-AUTH-TOKEN":"TOKEN 깞"
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("X-AUTH-TOKEN");
 
