@@ -33,10 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors();
+        // 토큰 인증이므로 세션 사용x
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.headers().frameOptions().disable();// iframe을 쓸지말지 헤더에서 직접 정의
+        http.headers().frameOptions().disable();
         http.authorizeRequests();
-// 회원 관리 처리 API (POST /user/**) 에 대해 CSRF 무시
+        // 회원 관리 처리 API (POST /user/**) 에 대해 CSRF 무시
 
         http.authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
@@ -49,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/signup").permitAll()
                 .antMatchers("/").permitAll()
-                .antMatchers("/kakao/callback").permitAll()
+//                .antMatchers("/kakao/callback").permitAll()
                 .antMatchers("/**").permitAll()
                 // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()

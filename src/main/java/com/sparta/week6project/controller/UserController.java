@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -24,9 +26,12 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+        LoginResponseDto loginResponseDto=new LoginResponseDto();
+        response.addHeader("X-AUTH-TOKEN", loginResponseDto.getToken());
         return userService.loginUser(loginRequestDto);
     }
+
     //HttpServletResponse response
     //response.addHeader("X-AUTH-TOKEN", loginResponseDto.getToken());
 
