@@ -1,12 +1,15 @@
 package com.sparta.week6project.model;
 
+import com.sparta.week6project.dto.requestDto.SignUpRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
+@Setter
 @Entity(name = "userinfo")
 public class User {
 
@@ -23,10 +26,17 @@ public class User {
     @Column(nullable = true)
     private String profileImage;
 
-    @Column(nullable = true)
+    @Column(nullable = true,unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String nickname;
 
+    public User(SignUpRequestDto signUpRequestDto) {
+        this.username = signUpRequestDto.getUsername();
+        this.password = signUpRequestDto.getPassword();
+        this.profileImage = signUpRequestDto.getProfileImage();
+        this.email=signUpRequestDto.getEmail();
+        this.nickname = signUpRequestDto.getNickname();
+    }
 }
