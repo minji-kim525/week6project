@@ -10,4 +10,6 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     Long countByPostId(Long id);
     Optional<Heart> findByUser_IdAndPost_Id(Long userId, Long postId);
     Heart findByPostIdAndUserId(Long id, Long userId);
+
+    void deleteAllByPostId(Long postId);
 }

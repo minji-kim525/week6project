@@ -29,14 +29,9 @@ dependencies {
 
     // S3 Bucket 설정
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.5.RELEASE'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.springframework.security:spring-security-test'
-
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
+
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 

@@ -7,11 +7,7 @@ import com.sparta.week6project.model.Heart;
 import com.sparta.week6project.model.Post;
 import com.sparta.week6project.model.Tag;
 import com.sparta.week6project.model.User;
-import com.sparta.week6project.repository.HeartRepository;
-import com.sparta.week6project.repository.PostRepository;
-import com.sparta.week6project.repository.TagRepository;
-import com.sparta.week6project.repository.UserRepository;
-import com.sparta.week6project.repository.mapping.TagMapping;
+import com.sparta.week6project.repository.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,15 +21,18 @@ public class PostService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final HeartRepository heartRepository;
+    private final CommentRepository commentRepository;
     public PostService(
             PostRepository postRepository,
             UserRepository userRepository,
             TagRepository tagRepository,
-            HeartRepository heartRepository){
+            HeartRepository heartRepository,
+            CommentRepository commentRepository){
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.tagRepository = tagRepository;
         this.heartRepository = heartRepository;
+        this.commentRepository = commentRepository;
     }
 
     // 게시글 작성
@@ -97,12 +96,18 @@ public class PostService {
             throw new IllegalArgumentException("해당 글이 존재 하지 않거나 권한이 없습니다.");
         }
 
+        // 게시글 삭제전 게시글 DB를 참조한 하위 데이터들 먼저 삭제
         tagRepository.deleteAllByPostId(postId);
+        heartRepository.deleteAllByPostId(postId);
+        commentRepository.deleteAllByPostId(postId);
 
+        // 게시글 삭제
         postRepository.deleteById(postId);
 
     }
 
+
+    // 게시글 조회용 postResponsMapping
     private PostResponseDto postResMapping(Post post, Long userId){
         Heart heart = heartRepository.findByPostIdAndUserId(post.getId(), userId);
         return PostResponseDto.builder()
@@ -116,6 +121,5 @@ public class PostService {
                 .tags(tagRepository.findAllByPostId(post.getId()))
                 .build();
     }
-
 
 }
