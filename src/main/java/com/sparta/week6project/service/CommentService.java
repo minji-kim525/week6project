@@ -4,8 +4,10 @@ import com.sparta.week6project.dto.responseDto.CommentResponseDto;
 import com.sparta.week6project.dto.requestDto.CommentRequestDto;
 import com.sparta.week6project.model.Comment;
 import com.sparta.week6project.model.Post;
+import com.sparta.week6project.model.User;
 import com.sparta.week6project.repository.CommentRepository;
 import com.sparta.week6project.repository.PostRepository;
+import com.sparta.week6project.repository.UserRepository;
 import com.sparta.week6project.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,18 @@ public class CommentService {
 //    private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     // 댓글 생성
     public void createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+        // userDetails에는 값이 user 일부분만 있으니 repository에서 userId를 뽑아서 findById 해주기
+        User user =userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                ()-> new NullPointerException("해당 유저가 존재하지 않습니다.")
+        );
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
         );
-        Comment comment = new Comment(post, requestDto, userDetails.getUser());
+        Comment comment = new Comment(post, requestDto, user);
         commentRepository.save(comment);
     }
     // 해당 게시글의 댓글 조회
@@ -44,8 +51,8 @@ public class CommentService {
         return commentList;
     }
     // 댓글 삭제
-    public void removeComment(Long postId, Long commentId,UserDetailsImpl userDetails) {
-        // 로그인한 사용자가 해당 댓글의 사용자가 맞는지 확인
+    public void removeComment(Long commentId,UserDetailsImpl userDetails) {
+                // 로그인한 사용자가 해당 댓글의 사용자가 맞는지 확인
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new NullPointerException("해당 댓글이 존재하지 않습니다")
         );

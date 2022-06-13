@@ -1,5 +1,6 @@
 package com.sparta.week6project.dto.responseDto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -8,11 +9,11 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private LocalDateTime modifiedAt;
     private String nickname;
-    private String contents;
+    private String content;
 
-    public CommentResponseDto(String nickname, String contents, LocalDateTime modifiedAt) {
+    public CommentResponseDto(String nickname, String content, LocalDateTime modifiedAt) {
         this.nickname = nickname;
         this.modifiedAt = modifiedAt;
-        this.contents = contents;
+        this.content = content;
     }
 }

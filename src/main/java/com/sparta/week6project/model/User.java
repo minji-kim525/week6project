@@ -1,5 +1,6 @@
 package com.sparta.week6project.model;
 
+import com.sparta.week6project.dto.requestDto.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,9 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+    public User(SignupRequestDto requestDto){
+        this.username = requestDto.getUsername();
+        this.password = requestDto.getPassword();
+        this.nickname = requestDto.getNickname();
+    }
 }

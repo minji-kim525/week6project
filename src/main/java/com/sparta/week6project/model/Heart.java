@@ -23,7 +23,7 @@ public class Heart {
     private User user;
 
     @Column(nullable = false)
-    private boolean isheart = false;
+    private Boolean isheart = false;
 
     public Heart(Post post, User user) {
         this.post = post;
