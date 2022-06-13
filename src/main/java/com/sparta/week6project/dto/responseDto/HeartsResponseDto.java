@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class HeartsResponseDto {
-    private boolean isheart;
+    private Boolean isheart;
 
-    public HeartsResponseDto(boolean isheart) {
+    public HeartsResponseDto(Boolean isheart) {
 
         this.isheart = isheart;
     }

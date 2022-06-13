@@ -27,7 +27,7 @@ public class HeartService {
     public HeartsResponseDto update(Long postId, UserDetailsImpl userDetails) {
 
         Long userId = userDetails.getUser().getId();
-        boolean tf;
+        Boolean tf;
         // 로그인한 사용자면 레포지토리에서 찾아오자 heart 테이블을
         Optional<Heart> heart = heartRepository.findByUser_IdAndPost_Id(postId, userId);
         if (heart.isPresent()) {
@@ -47,7 +47,6 @@ public class HeartService {
             heartRepository.save(hearts);
             tf = hearts.getIsheart();
         }
-        HeartsResponseDto heartsresponseDto = new HeartsResponseDto(tf);
-        return heartsresponseDto;
+        return new HeartsResponseDto(tf);
     }
 }
