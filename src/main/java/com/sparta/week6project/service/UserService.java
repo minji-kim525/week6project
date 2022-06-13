@@ -1,5 +1,6 @@
 package com.sparta.week6project.service;
 
+import com.sparta.week6project.dto.requestDto.DuplicationRequestDto;
 import com.sparta.week6project.dto.requestDto.LoginRequestDto;
 import com.sparta.week6project.dto.requestDto.SignUpRequestDto;
 import com.sparta.week6project.dto.responseDto.LoginResponseDto;
@@ -63,20 +64,28 @@ public class UserService {
         return new ResponseEntity<>(new LoginResponseDto(jwtTokenProvider.createToken(loginRequestDto.getUsername()), true, "로그인 성공"), HttpStatus.OK);
     }
 
-}
-//    public ResponseEntity<DuplicationCheckDto.DuplicationResponseDto> duplicationCheck(DuplicationCheckDto duplicationCheckDto ) {
-//        Optional<User> foundUsername = userRepository.findByUsername(duplicationCheckDto.getUsername());
-//        Optional<User> foundNickname = userRepository.findByNickname(duplicationCheckDto.getNickname());
-//        Optional<User> foundEmail = userRepository.findByEmail(duplicationCheckDto.getEmail());
-//
-//        try {
-////            UserValidator.signupValidator(foundUsername,foundNickname,foundEmail.s);
-//
-//        } catch (IllegalArgumentException e) {
-//            return new ResponseEntity<>(new DuplicationCheckDto.DuplicationResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
-//
-//        }
-//
-//        return new ResponseEntity<>(new DuplicationCheckDto.DuplicationResponseDto("중복확인 완료"), HttpStatus.OK);
-//    }
 
+    public ResponseEntity<DuplicationRequestDto.DuplicationResponseDto> duplicationCheck(DuplicationRequestDto duplicationCheckDto ) {
+
+        try {
+//            UserValidator.signupValidator(foundUsername,foundNickname,foundEmail.s);
+            if (userRepository.existsByUsername(duplicationCheckDto.getUsername())) {
+                throw new IllegalArgumentException("중복된 아이디가 존재합니다.");
+            }
+            if (userRepository.existsByNickname(duplicationCheckDto.getNickname())) {
+                throw new IllegalArgumentException("중복된 닉네임이 존재합니다.");
+            }
+            if (userRepository.existsByEmail(duplicationCheckDto.getEmail())) {
+                throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
+            }
+
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(new DuplicationRequestDto.DuplicationResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+
+        }
+
+        return new ResponseEntity<>(new DuplicationRequestDto.DuplicationResponseDto("중복확인 완료"), HttpStatus.OK);
+    }
+
+
+}
