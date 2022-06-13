@@ -29,11 +29,11 @@ public class HeartService {
         Long userId = userDetails.getUser().getId();
         boolean tf;
         // 로그인한 사용자면 레포지토리에서 찾아오자 heart 테이블을
-        Optional<Heart> heart = heartRepository.findAllByUser_IdAndPost_Id(postId, userId);
+        Optional<Heart> heart = heartRepository.findByUser_IdAndPost_Id(postId, userId);
         if (heart.isPresent()) {
             // 해당 행이 있으면 Isheart값 변경
             heart.get().setIsheart();
-            tf = heart.get().isIsheart();
+            tf = heart.get().getIsheart();
         }
         else {
             // 처음 좋아요를 누르는 것이라면 생성하기위한 Post, User 가져오기기
@@ -45,7 +45,7 @@ public class HeartService {
             );
             Heart hearts = new Heart(post, user);
             heartRepository.save(hearts);
-            tf = hearts.isIsheart();
+            tf = hearts.getIsheart();
         }
         HeartsResponseDto heartsresponseDto = new HeartsResponseDto(tf);
         return heartsresponseDto;

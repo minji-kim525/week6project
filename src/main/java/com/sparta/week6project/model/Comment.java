@@ -30,6 +30,6 @@ public class Comment extends Timestamped{
     public Comment(Post post, CommentRequestDto requestDto, User user) {
         this.post = post;
         this.user = user;
-        this.content = requestDto.getContents();
+        this.content = requestDto.getContent();
     }
 }

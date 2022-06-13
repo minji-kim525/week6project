@@ -30,11 +30,11 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.readComment(postId));
     }
     // 댓글 삭제
-    @DeleteMapping("/posts/{postId}/comments/{commentId}")
-    public ResponseEntity<Void> removeComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, UserDetailsImpl userDetails) {
+    @DeleteMapping("/posts/comments/{commentId}")
+    public ResponseEntity<Void> removeComment(@PathVariable("commentId") Long commentId, UserDetailsImpl userDetails) {
         // 로그인한 사용자인지 아닌지 구별하고 빠꾸먹이기?
 
-        commentService.removeComment(postId, commentId,userDetails);
+        commentService.removeComment(commentId,userDetails);
         return ResponseEntity.ok().build();
     }
 }
