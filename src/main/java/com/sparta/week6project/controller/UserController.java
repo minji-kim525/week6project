@@ -27,9 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
-        LoginResponseDto loginResponseDto=new LoginResponseDto();
-        response.addHeader("X-AUTH-TOKEN", loginResponseDto.getToken());
+    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){;
         return userService.loginUser(loginRequestDto);
     }
 
