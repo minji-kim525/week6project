@@ -5,7 +5,6 @@ import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
 import com.sparta.week6project.security.UserDetailsImpl;
 import com.sparta.week6project.service.PostService;
-import com.sparta.week6project.service.S3Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,46 +16,47 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-    private final S3Service s3Service;
 
-    public PostController(PostService postService, S3Service s3Service){
+    public PostController(PostService postService){
         this.postService = postService;
-        this.s3Service = s3Service;
     }
 
 
     // 게시글 조회
     @GetMapping("/posts/post/{postId}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(postService.getPost(postId, userDetails.getUser().getId()));
+        return ResponseEntity.ok().body(postService.getPost(postId, isLogin(userDetails)));
     }
 
 
     // 게시글 전체 조회
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(postService.getPosts(userDetails.getUser().getId()));
+        if(userDetails == null){
+            return ResponseEntity.ok().body(postService.getPosts(0L));
+        }
+        return ResponseEntity.ok().body(postService.getPosts(isLogin(userDetails)));
     }
 
 
     // 작성글 전체 조회
     @GetMapping("/posts/myposts")
     public ResponseEntity<List<PostResponseDto>> getMyposts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(postService.getMyPosts(userDetails.getUser().getId()));
+        return ResponseEntity.ok().body(postService.getMyPosts(isLogin(userDetails)));
     }
 
 
     // 좋아요한 게시글 전체 조회
     @GetMapping("/posts/heart")
     public ResponseEntity<List<PostResponseDto>> getLiedPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(postService.getLikedPosts(userDetails.getUser().getId()));
+        return ResponseEntity.ok().body(postService.getLikedPosts(isLogin(userDetails)));
     }
 
 
     // 같은 종류 태그 전체 조회
     @GetMapping("/posts/tag")
     public ResponseEntity<List<PostResponseDto>> getTaggedPosts(@RequestBody TagRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(postService.getTaggedPosts(userDetails.getUser().getId(), requestDto));
+        return ResponseEntity.ok().body(postService.getTaggedPosts(isLogin(userDetails), requestDto));
     }
 
     // ================================ 조회 컨트롤러 종료 ===============================
@@ -68,20 +68,19 @@ public class PostController {
             @RequestPart(value = "postDto") PostRequestDto requestDto,
             @RequestPart(value = "file") MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println(userDetails.getUser().getId());
-        System.out.println(userDetails.getUser().getUsername());
-        String imagePath = s3Service.upload(file);
-        requestDto.setImageUrl(imagePath);
-        postService.createPost(userDetails.getUser().getId(), requestDto);
+        postService.createPost(userDetails.getUser().getId(), requestDto, file);
         return ResponseEntity.ok().build();
     }
 
 
     // 게시글 수정
     @PutMapping("/posts/post/{postId}")
-    public ResponseEntity<Void> updateBoard(@PathVariable Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        Long userId = userDetails.getUser().getId();
-        postService.updatePost(postId, userDetails.getUser().getId(), requestDto);
+    public ResponseEntity<Void> updateBoard(
+            @PathVariable Long postId,
+            @RequestPart(value = "postDto") PostRequestDto requestDto,
+            @RequestPart(value = "file") MultipartFile file,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.updatePost(postId, userDetails.getUser().getId(), requestDto, file);
         return ResponseEntity.ok().build();
     }
 
@@ -89,16 +88,16 @@ public class PostController {
     // 게시글 삭제
     @DeleteMapping("/posts/post/{postId}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        Long userId = userDetails.getUser().getId();
         postService.deletePost(postId, userDetails.getUser().getId());
         return ResponseEntity.ok().build();
     }
 
 
-    // 파일 업로드 테스트
-    @PostMapping("/upload")
-    public String upload(MultipartFile file){
-        return s3Service.upload(file);
+    // 로그인 확인
+    private Long isLogin(UserDetailsImpl userDetails){
+        if(userDetails == null)return 0L;
+        return userDetails.getUser().getId();
     }
+
 
 }
