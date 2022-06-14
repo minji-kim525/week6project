@@ -32,7 +32,7 @@ public class S3Service {
     @Value("${iamSecretKey}")
     private String secretKey;
 
-    private String region = "ap-northeast-2";
+    private final String region = "ap-northeast-2";
 
     private final String bucket = "team7-bucket";
 
@@ -47,15 +47,17 @@ public class S3Service {
     }
 
 
+    // 파일 업로드
     public String upload(MultipartFile file) {
-        String fileName = createFileName(file.getOriginalFilename());
+        String fileName = createFileName(file.getOriginalFilename()); // 파일명 난수로 변경
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentLength(file.getSize());
-        objectMetadata.setContentType(file.getContentType());
+        objectMetadata.setContentLength(file.getSize());          // 파일 크기
+        objectMetadata.setContentType(file.getContentType());     // 파일 타입
 
         try(InputStream inputStream = file.getInputStream()) {
             s3Client.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
+
             return s3Client.getUrl(bucket, fileName).toString();
         }catch (IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"파일 업로드에 실패하셨습니다");
@@ -64,34 +66,25 @@ public class S3Service {
 
 
     // 글 수정 시 기존 s3에 있는 이미지 정보 삭제
-    public String upload(MultipartFile file, String newFilePath){
-        String fileName = createFileName(file.getOriginalFilename());
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentLength(file.getSize());
-        objectMetadata.setContentType(file.getContentType());
-
-        if(!"".equals(newFilePath) && newFilePath != null){
-            boolean isExistObject = s3Client.doesObjectExist(bucket,newFilePath);
+    public void deleteImageUrl(String filePath){
+        // 삭제 구문
+        if(!"".equals(filePath) && filePath != null){
+            boolean isExistObject = s3Client.doesObjectExist(bucket,filePath);
             if(isExistObject){
-                s3Client.deleteObject(bucket,newFilePath);
+                s3Client.deleteObject(filePath, bucket);
             }
         }
-
-        try(InputStream inputStream = file.getInputStream()) {
-            s3Client.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMetadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
-            return s3Client.getUrl(bucket, fileName).toString();
-        }catch (IOException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"파일 업로드에 실패하셨습니다");
-        }
-
     }
 
+
+    // 파일명 난수로 변경
     private String createFileName(String fileName) {
         // 먼저 파일 업로드 시, 파일명을 난수화하기 위해 random으로 돌립니다.
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
+
+    // 파일 유효성 검사
     private String getFileExtension(String fileName) {
         // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며,
         // 파일 타입과 상관없이 업로드할 수 있게 하기 위해 .의 존재 유무만 판단
@@ -100,7 +93,40 @@ public class S3Service {
         } catch (StringIndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }
-
     }
 
+
 }
+
+
+
+
+//    // 글 수정 시 기존 s3에 있는 이미지 정보 삭제
+//    public String upload(MultipartFile file, String newFilePath){
+//        String fileName = createFileName(file.getOriginalFilename());
+//        ObjectMetadata objectMetadata = new ObjectMetadata();
+//        objectMetadata.setContentLength(file.getSize());
+//        objectMetadata.setContentType(file.getContentType());
+//
+//        // 삭제 구문
+//        if(!"".equals(newFilePath) && newFilePath != null){
+//            boolean isExistObject = s3Client.doesObjectExist(bucket,newFilePath);
+//            if(isExistObject){
+//                s3Client.deleteObject(bucket,newFilePath);
+//            }
+//        }
+//
+//        try(InputStream inputStream = file.getInputStream()) {
+//            s3Client.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMetadata)
+//                    .withCannedAcl(CannedAccessControlList.PublicRead));
+//            return s3Client.getUrl(bucket, fileName).toString();
+//        }catch (IOException e){
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"파일 업로드에 실패하셨습니다");
+//        }
+//
+//    }
+//
+
+
+
+

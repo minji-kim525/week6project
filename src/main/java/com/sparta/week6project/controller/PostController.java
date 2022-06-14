@@ -1,6 +1,6 @@
 package com.sparta.week6project.controller;
 
-import com.sparta.week6project.dto.requestDto.PostRequestDto;
+import com.sparta.week6project.dto.requestDto.PostDto;
 import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
 import com.sparta.week6project.security.UserDetailsImpl;
@@ -63,14 +63,16 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/posts/post")
-    public void createBoard(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.createPost(userDetails.getUser().getId(), requestDto);
+    public void createBoard(@RequestPart PostDto postDto, @RequestPart MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String imagePath = s3Service.upload(file);
+        postDto.setImageUrl(imagePath);
+        postService.createPost(1L, postDto);
     }
 
 
     // 게시글 수정
     @PutMapping("/posts/post/{postId}")
-    public void updateBoard(@PathVariable Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public void updateBoard(@PathVariable Long postId, @RequestBody PostDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.updatePost(postId, userDetails.getUser().getId(), requestDto);
     }
 
@@ -78,13 +80,13 @@ public class PostController {
     // 게시글 삭제
     @DeleteMapping("/posts/post/{postId}")
     public void deleteBoard(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.deletePost(postId, userDetails.getUser().getId());
+        postService.deletePost(postId, 1L);
     }
 
 
     // 파일 업로드 테스트
     @PostMapping("/upload")
-    public String upload(@RequestPart("file") MultipartFile file){
+    public String upload(MultipartFile file){
         return s3Service.upload(file);
     }
 

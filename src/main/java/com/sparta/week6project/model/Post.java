@@ -1,6 +1,6 @@
 package com.sparta.week6project.model;
 
-import com.sparta.week6project.dto.requestDto.PostRequestDto;
+import com.sparta.week6project.dto.requestDto.PostDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,14 +28,14 @@ public class Post extends Timestamped {
     @Column(nullable = true)
     private String imageUrl;
 
-    public Post(User user, PostRequestDto requestDto) {
+    public Post(User user, PostDto requestDto) {
         this.user = user;
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.imageUrl = requestDto.getImageUrl();
     }
 
-    public void update(PostRequestDto requestDto){
+    public void update(PostDto requestDto){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.imageUrl = requestDto.getImageUrl();
