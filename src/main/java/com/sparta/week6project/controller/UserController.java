@@ -37,8 +37,8 @@ public class UserController {
     //response.addHeader("X-AUTH-TOKEN", loginResponseDto.getToken());
 
     @PostMapping("/user/signup/duplicate")
-    public ResponseEntity<DuplicationRequestDto.DuplicationResponseDto> duplicationCheck(DuplicationRequestDto duplicationCheckDto){
-        return userService.duplicationCheck(duplicationCheckDto);
+    public ResponseEntity<SignUpResponseDto> duplicationCheck(@RequestBody DuplicationRequestDto duplicationRequestDto){
+        return userService.duplicationCheck(duplicationRequestDto);
     }
 
     @GetMapping("/user/logout")

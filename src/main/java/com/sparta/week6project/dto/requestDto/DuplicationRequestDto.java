@@ -13,13 +13,4 @@ public class DuplicationRequestDto {
     private String username;
     private String nickname;
     private String email;
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class DuplicationResponseDto {
-        private String message;
-
-    }
 }
