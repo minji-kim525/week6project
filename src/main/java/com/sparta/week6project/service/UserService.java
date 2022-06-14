@@ -49,22 +49,17 @@ public class UserService {
 
     }
 
-    public ResponseEntity<LoginResponseDto> loginUser(LoginRequestDto loginRequestDto) {
+    public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) {
         Optional<User> foundUsername = userRepository.findByUsername(loginRequestDto.getUsername());
 
         //로그인 유효성 검사 후 메시지 리턴
-        try {
-            UserValidator.loginCheck(foundUsername, loginRequestDto, passwordEncoder);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new LoginResponseDto(null, false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        UserValidator.loginCheck(foundUsername, loginRequestDto, passwordEncoder);
+        return new LoginResponseDto(jwtTokenProvider.createToken(loginRequestDto.getUsername()), true, "로그인 성공");
 
-        }
-
-        return new ResponseEntity<>(new LoginResponseDto(jwtTokenProvider.createToken(loginRequestDto.getUsername()), true, "로그인 성공"), HttpStatus.OK);
     }
 
 
-    public ResponseEntity<SignUpResponseDto> duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
+    public SignUpResponseDto duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
         try {
 
             if (userRepository.existsByUsername(duplicationRequestDto.getUsername())) {
@@ -78,11 +73,9 @@ public class UserService {
             }
 
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new SignUpResponseDto(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-
+            throw e;
         }
-
-        return new ResponseEntity<>(new SignUpResponseDto(true, "중복확인 완료"), HttpStatus.OK);
+        return new SignUpResponseDto(true, "중복확인 완료");
     }
 }
 

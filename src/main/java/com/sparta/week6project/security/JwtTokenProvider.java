@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,8 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private String secretKey = "rewind";
-    public static final String AUTH_HEADER = "X-AUTH-TOKEN";
+//    public static final String AUTH_HEADER = "X-AUTH-TOKEN";
+public static final String AUTH_HEADER = "Authorization";
     public final HttpServletResponse response;
 
     // 토큰 유효시간
@@ -68,7 +70,7 @@ public class JwtTokenProvider {
     //Request의 Header에서 token 값을 가져옴
     //"X-AUTH-TOKEN":"TOKEN 깞"
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader("Authorization");
 
     }
 

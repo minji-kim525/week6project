@@ -7,6 +7,7 @@ import com.sparta.week6project.security.UserDetailsImpl;
 import com.sparta.week6project.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class CommentController {
 
     // 댓글 작성
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<SignUpResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<SignUpResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(commentService.createComment(postId, requestDto, userDetails)); // 200, ok 가 가나?
     }
     // 댓글 조회
@@ -29,9 +30,7 @@ public class CommentController {
     }
     // 댓글 삭제
     @DeleteMapping("/posts/comments/{commentId}")
-    public ResponseEntity<Void> removeComment(@PathVariable("commentId") Long commentId, UserDetailsImpl userDetails) {
-        // 로그인한 사용자인지 아닌지 구별하고 빠꾸먹이기?
-
+    public ResponseEntity<Void> removeComment(@PathVariable("commentId") Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.removeComment(commentId,userDetails);
         return ResponseEntity.ok().build();
     }
