@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Date;
 
@@ -21,6 +22,8 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private String secretKey = "rewind";
+    public static final String AUTH_HEADER = "X-AUTH-TOKEN";
+    public final HttpServletResponse response;
 
     // 토큰 유효시간
     // 프론트엔드와 약속해야 함
@@ -39,13 +42,16 @@ public class JwtTokenProvider {
 //        claims.put("email", email);
 //        claims.put("nickname", nickname);
         Date now = new Date();
-        return Jwts.builder()
+        String token= Jwts.builder()
                 .setClaims(claims)//정보저장
                 .setIssuedAt(now)//토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + tokenValidTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey)//사용할 암호화 알고리즘
                 //signature에 들어갈 secret값 세팅
                 .compact();
+
+        response.addHeader(AUTH_HEADER,token);
+        return token;
     }
 
     // 토큰에서 회원 정보 추출
