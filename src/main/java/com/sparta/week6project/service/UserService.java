@@ -65,27 +65,25 @@ public class UserService {
     }
 
 
-    public ResponseEntity<DuplicationRequestDto.DuplicationResponseDto> duplicationCheck(DuplicationRequestDto duplicationCheckDto ) {
-
+    public ResponseEntity<SignUpResponseDto> duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
         try {
-//            UserValidator.signupValidator(foundUsername,foundNickname,foundEmail.s);
-            if (userRepository.existsByUsername(duplicationCheckDto.getUsername())) {
+
+            if (userRepository.existsByUsername(duplicationRequestDto.getUsername())) {
                 throw new IllegalArgumentException("중복된 아이디가 존재합니다.");
             }
-            if (userRepository.existsByNickname(duplicationCheckDto.getNickname())) {
+            if (userRepository.existsByNickname(duplicationRequestDto.getNickname())) {
                 throw new IllegalArgumentException("중복된 닉네임이 존재합니다.");
             }
-            if (userRepository.existsByEmail(duplicationCheckDto.getEmail())) {
+            if (userRepository.existsByEmail(duplicationRequestDto.getEmail())) {
                 throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
             }
 
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new DuplicationRequestDto.DuplicationResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new SignUpResponseDto(false, e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
 
-        return new ResponseEntity<>(new DuplicationRequestDto.DuplicationResponseDto("중복확인 완료"), HttpStatus.OK);
+        return new ResponseEntity<>(new SignUpResponseDto(true, "중복확인 완료"), HttpStatus.OK);
     }
-
-
 }
+
