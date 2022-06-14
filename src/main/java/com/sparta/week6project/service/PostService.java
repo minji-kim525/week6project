@@ -134,9 +134,12 @@ public class PostService {
         );
 
         Post post = postRepository.save(new Post(user, requestDto));
-        for(TagRequestDto tagRequestDto : requestDto.getTags()){
-            tagRepository.save(new Tag(post, tagRequestDto));
+        if(!requestDto.getTags().isEmpty()) {
+            for(TagRequestDto tagRequestDto : requestDto.getTags()){
+                tagRepository.save(new Tag(post, tagRequestDto));
+            }
         }
+
     }
 
 

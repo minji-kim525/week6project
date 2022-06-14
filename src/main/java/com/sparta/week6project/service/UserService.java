@@ -64,7 +64,7 @@ public class UserService {
     }
 
 
-    public ResponseEntity<SignUpResponseDto> duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
+    public SignUpResponseDto duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
         try {
 
             if (userRepository.existsByUsername(duplicationRequestDto.getUsername())) {
@@ -78,11 +78,9 @@ public class UserService {
             }
 
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new SignUpResponseDto(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-
+            throw e;
         }
-
-        return new ResponseEntity<>(new SignUpResponseDto(true, "중복확인 완료"), HttpStatus.OK);
+        return new SignUpResponseDto(true, "중복확인 완료");
     }
 }
 
