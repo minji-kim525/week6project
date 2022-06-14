@@ -1,6 +1,6 @@
 package com.sparta.week6project.controller;
 
-import com.sparta.week6project.dto.requestDto.PostDto;
+import com.sparta.week6project.dto.requestDto.PostRequestDto;
 import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
 import com.sparta.week6project.security.UserDetailsImpl;
@@ -64,17 +64,22 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/posts/post")
-    public ResponseEntity<Void> createBoard(@RequestPart PostDto postDto, @RequestPart MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> createBoard(
+            @RequestPart(value = "postDto") PostRequestDto requestDto,
+            @RequestPart(value = "file") MultipartFile file,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println(userDetails.getUser().getId());
+        System.out.println(userDetails.getUser().getUsername());
         String imagePath = s3Service.upload(file);
-        postDto.setImageUrl(imagePath);
-        postService.createPost(1L, postDto);
+        requestDto.setImageUrl(imagePath);
+        postService.createPost(userDetails.getUser().getId(), requestDto);
         return ResponseEntity.ok().build();
     }
 
 
     // 게시글 수정
     @PutMapping("/posts/post/{postId}")
-    public ResponseEntity<Void> updateBoard(@PathVariable Long postId, @RequestBody PostDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> updateBoard(@PathVariable Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 //        Long userId = userDetails.getUser().getId();
         postService.updatePost(postId, userDetails.getUser().getId(), requestDto);
         return ResponseEntity.ok().build();

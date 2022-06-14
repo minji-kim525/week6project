@@ -40,8 +40,8 @@ public class UserController {
         return userService.duplicationCheck(duplicationRequestDto);
     }
 
-    @GetMapping("/user/logout")
-    public void logoutUser(){
-
-    }
+//    @GetMapping("/user/logout")
+//    public void logoutUser(){
+//
+//    }
 }
