@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +28,8 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){;
-        return userService.loginUser(loginRequestDto);
+    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+        return ResponseEntity.ok().body(userService.loginUser(loginRequestDto));
 
     }
 

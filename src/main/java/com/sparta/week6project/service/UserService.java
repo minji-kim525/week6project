@@ -49,18 +49,13 @@ public class UserService {
 
     }
 
-    public ResponseEntity<LoginResponseDto> loginUser(LoginRequestDto loginRequestDto) {
+    public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) {
         Optional<User> foundUsername = userRepository.findByUsername(loginRequestDto.getUsername());
 
         //로그인 유효성 검사 후 메시지 리턴
-        try {
-            UserValidator.loginCheck(foundUsername, loginRequestDto, passwordEncoder);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new LoginResponseDto(null, false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        UserValidator.loginCheck(foundUsername, loginRequestDto, passwordEncoder);
+        return new LoginResponseDto(jwtTokenProvider.createToken(loginRequestDto.getUsername()), true, "로그인 성공");
 
-        }
-
-        return new ResponseEntity<>(new LoginResponseDto(jwtTokenProvider.createToken(loginRequestDto.getUsername()), true, "로그인 성공"), HttpStatus.OK);
     }
 
 

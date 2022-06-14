@@ -42,11 +42,13 @@ public class CommentService {
         List<Comment> comments = commentRepository.findAllByPost_IdOrderByModifiedAtDesc(postId);
         // comment 작성자닉네임 , 수정시간, 댓글 내용
         List<CommentResponseDto> commentList = new ArrayList<>();
-        for (int i=0; i<comments.size(); i++) {
-            String name = comments.get(i).getUser().getNickname();
-            String content = comments.get(i).getContent();
-            LocalDateTime modifiedAt = comments.get(i).getModifiedAt();
-            commentList.add(new CommentResponseDto(name, content, modifiedAt));
+        if(!comments.isEmpty()) {
+            for (int i=0; i<comments.size(); i++) {
+                String name = comments.get(i).getUser().getNickname();
+                String content = comments.get(i).getContent();
+                LocalDateTime modifiedAt = comments.get(i).getModifiedAt();
+                commentList.add(new CommentResponseDto(name, content, modifiedAt));
+            }
         }
         return commentList;
     }

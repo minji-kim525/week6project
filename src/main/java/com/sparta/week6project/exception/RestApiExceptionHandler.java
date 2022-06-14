@@ -2,6 +2,7 @@ package com.sparta.week6project.exception;
 
 
 import com.sparta.week6project.dto.responseDto.ErrorResponseDto;
+import com.sparta.week6project.dto.responseDto.LoginResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,11 +17,17 @@ public class RestApiExceptionHandler {
         ErrorResponseDto ResponseException = new ErrorResponseDto(false, e.getMessage());
         return ResponseEntity.badRequest().body(ResponseException);
     }
-//
-//    @ExceptionHandler(LoginIdNotValidException.class)
-//    public ResponseEntity<Object> handlerOrderPriceNotValidateException (LoginIdNotValidException e) {
-//        return ResponseEntity.badRequest().body(e.getMessage());
-//    }
+    @ExceptionHandler({LoginIdNotValidException.class})
+    public ResponseEntity<Object> handlerLoginIdNotValidException (LoginIdNotValidException e) {
+        LoginResponseDto ResponseException = new LoginResponseDto(null, false, e.getMessage());
+        return ResponseEntity.badRequest().body(ResponseException);
+    }
+
+    @ExceptionHandler(LoginPasswordNotValidException.class)
+    public ResponseEntity<Object> handlerLoginPasswordNotValidException (LoginPasswordNotValidException e) {
+        LoginResponseDto ResponseException = new LoginResponseDto(null, false, e.getMessage());
+        return ResponseEntity.badRequest().body(ResponseException);
+    }
 
     @ExceptionHandler(value = { NullPointerException.class})
     public ResponseEntity<Object> temp2 (NullPointerException e) {

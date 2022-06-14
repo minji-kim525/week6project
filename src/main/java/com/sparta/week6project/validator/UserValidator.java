@@ -2,6 +2,8 @@ package com.sparta.week6project.validator;
 
 import com.sparta.week6project.dto.requestDto.LoginRequestDto;
 import com.sparta.week6project.dto.requestDto.SignUpRequestDto;
+import com.sparta.week6project.exception.LoginIdNotValidException;
+import com.sparta.week6project.exception.LoginPasswordNotValidException;
 import com.sparta.week6project.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -50,10 +52,10 @@ public class UserValidator {
     //로그인 유효성 검사
     public static void loginCheck(Optional<User> foundUsername, LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
         if (!foundUsername.isPresent()) {
-            throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
+            throw new LoginIdNotValidException();
         }
         if (!passwordEncoder.matches(loginRequestDto.getPassword(),foundUsername.get().getPassword())) {
-            throw new IllegalArgumentException("비밀번호를 다시 확인해 주세요.");
+            throw new LoginPasswordNotValidException();
         }
     }
 }
