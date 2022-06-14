@@ -1,6 +1,6 @@
 package com.sparta.week6project.service;
 
-import com.sparta.week6project.dto.requestDto.PostDto;
+import com.sparta.week6project.dto.requestDto.PostRequestDto;
 import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
 import com.sparta.week6project.model.Heart;
@@ -128,7 +128,7 @@ public class PostService {
 
 
     // 게시글 작성
-    public void createPost(Long userId, PostDto requestDto) {
+    public void createPost(Long userId, PostRequestDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("로그인이 필요합니다.")
         );
@@ -142,7 +142,7 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public void updatePost(Long postId, Long userId, PostDto requestDto) {
+    public void updatePost(Long postId, Long userId, PostRequestDto requestDto) {
         Post post = postRepository.findByIdAndUserId(postId, userId);
         if(post == null){
             throw new NullPointerException("존재하지 않는 글입니다.");
