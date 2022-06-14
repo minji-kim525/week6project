@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.sparta.week6project.dto.requestDto.FileRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,7 @@ public class S3Service {
 
 
     // 파일 업로드
-    public String upload(MultipartFile file) {
+    public FileRequestDto upload(MultipartFile file) {
         String fileName = createFileName(file.getOriginalFilename()); // 파일명 난수로 변경
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());          // 파일 크기
@@ -57,8 +58,7 @@ public class S3Service {
         try(InputStream inputStream = file.getInputStream()) {
             s3Client.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-
-            return s3Client.getUrl(bucket, fileName).toString();
+            return new FileRequestDto(s3Client.getUrl(bucket, fileName).toString(), fileName);
         }catch (IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"파일 업로드에 실패하셨습니다");
         }
@@ -69,9 +69,9 @@ public class S3Service {
     public void deleteImageUrl(String filePath){
         // 삭제 구문
         if(!"".equals(filePath) && filePath != null){
-            boolean isExistObject = s3Client.doesObjectExist(bucket,filePath);
+            boolean isExistObject = s3Client.doesObjectExist(bucket, filePath);
             if(isExistObject){
-                s3Client.deleteObject(filePath, bucket);
+                s3Client.deleteObject(bucket, filePath);
             }
         }
     }
@@ -97,36 +97,6 @@ public class S3Service {
 
 
 }
-
-
-
-
-//    // 글 수정 시 기존 s3에 있는 이미지 정보 삭제
-//    public String upload(MultipartFile file, String newFilePath){
-//        String fileName = createFileName(file.getOriginalFilename());
-//        ObjectMetadata objectMetadata = new ObjectMetadata();
-//        objectMetadata.setContentLength(file.getSize());
-//        objectMetadata.setContentType(file.getContentType());
-//
-//        // 삭제 구문
-//        if(!"".equals(newFilePath) && newFilePath != null){
-//            boolean isExistObject = s3Client.doesObjectExist(bucket,newFilePath);
-//            if(isExistObject){
-//                s3Client.deleteObject(bucket,newFilePath);
-//            }
-//        }
-//
-//        try(InputStream inputStream = file.getInputStream()) {
-//            s3Client.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMetadata)
-//                    .withCannedAcl(CannedAccessControlList.PublicRead));
-//            return s3Client.getUrl(bucket, fileName).toString();
-//        }catch (IOException e){
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"파일 업로드에 실패하셨습니다");
-//        }
-//
-//    }
-//
-
 
 
 

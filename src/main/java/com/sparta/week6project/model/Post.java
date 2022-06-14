@@ -28,17 +28,23 @@ public class Post extends Timestamped {
     @Column(nullable = true)
     private String imageUrl;
 
+    @Column(nullable = true)
+    private String fileName;
+
     public Post(User user, PostRequestDto requestDto) {
         this.user = user;
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.imageUrl = requestDto.getImageUrl();
+        this.fileName = requestDto.getFileName();
     }
 
     public void update(PostRequestDto requestDto){
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.imageUrl = requestDto.getImageUrl();
+        this.imageUrl = requestDto.getFileName();
+        this.fileName = requestDto.getFileName();
     }
 
 }

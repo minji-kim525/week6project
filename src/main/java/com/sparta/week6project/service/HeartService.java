@@ -34,10 +34,9 @@ public class HeartService {
             // 해당 행이 있으면 Isheart값 변경
             heart.get().setIsheart();
             tf = heart.get().getIsheart();
-        }
-        else {
+        } else {
             // 처음 좋아요를 누르는 것이라면 생성하기위한 Post, User 가져오기기
-           Post post = postRepository.findById(postId).orElseThrow(
+            Post post = postRepository.findById(postId).orElseThrow(
                     () -> new NullPointerException("해당 게시글이 존재하지 않습니다.")
             );
             User user = userRepository.findById(userId).orElseThrow(

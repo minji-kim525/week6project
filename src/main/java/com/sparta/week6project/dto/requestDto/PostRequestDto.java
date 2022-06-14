@@ -14,7 +14,12 @@ public class PostRequestDto {
     private String title;
     private String content;
     private String imageUrl;
+    private String fileName;
     private List<TagRequestDto> tags;
 
 
+    public void setImageUrlAndFileName(FileRequestDto requestDto) {
+        this.imageUrl = requestDto.getImageUrl();
+        this.fileName = requestDto.getFileName();
+    }
 }
