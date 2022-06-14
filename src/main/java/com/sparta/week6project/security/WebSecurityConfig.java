@@ -1,10 +1,13 @@
 package com.sparta.week6project.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,6 +33,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    // 정적 자원에 대해서는 Security 설정을 적용하지 않음.
+    @Override
+    public void configure(WebSecurity web) {
+        web
+                .ignoring()
+                .antMatchers("/h2-console/**")
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors();
@@ -47,14 +59,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // css 폴더를 login 없이 허용
                 .antMatchers("/css/**").permitAll()
                 // 회원 관리 처리 API 전부를 login 없이 허용
-                .antMatchers("/user/login").permitAll()
-                .antMatchers("/user/signup").permitAll()
-                .antMatchers("/posts/**").permitAll() // 임시용
+                .antMatchers("/user/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/posts/**").permitAll()
                 .antMatchers("/").permitAll()
-//                .antMatchers("/kakao/callback").permitAll()
-                .antMatchers("/**").permitAll()
-                // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
+                .and()
+                .logout()
+                .logoutUrl("/user/logout")
+                .deleteCookies("token")
+                .logoutSuccessUrl("/")
+//                .antMatchers("/kakao/callback").permitAll()
+//                .antMatchers("/**").permitAll()
+                // 그 외 어떤 요청이든 '인증'
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 

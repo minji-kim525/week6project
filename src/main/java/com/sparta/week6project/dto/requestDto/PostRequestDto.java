@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostDto {
+public class PostRequestDto {
 
     private String title;
     private String content;
