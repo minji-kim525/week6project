@@ -10,7 +10,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Post findByIdAndUserId(Long postId, Long userId);
 
-    Boolean existsByIdAndUserId(Long postId, Long userId);
-
     List<Post> findAllByUserIdOrderByModifiedAtDesc(Long userId);
+
 }
