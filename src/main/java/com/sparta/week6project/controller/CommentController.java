@@ -1,7 +1,8 @@
 package com.sparta.week6project.controller;
 
-import com.sparta.week6project.dto.responseDto.CommentResponseDto;
 import com.sparta.week6project.dto.requestDto.CommentRequestDto;
+import com.sparta.week6project.dto.responseDto.CommentResponseDto;
+import com.sparta.week6project.dto.responseDto.SignUpResponseDto;
 import com.sparta.week6project.security.UserDetailsImpl;
 import com.sparta.week6project.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,8 @@ public class CommentController {
 
     // 댓글 작성
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<Void> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, UserDetailsImpl userDetails) {
-        // JWT 확인해서 빠꾸?
-
-        commentService.createComment(postId, requestDto, userDetails);
-        return ResponseEntity.ok().build(); // 200, ok 가 가나?
+    public ResponseEntity<SignUpResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(commentService.createComment(postId, requestDto, userDetails)); // 200, ok 가 가나?
     }
     // 댓글 조회
     @GetMapping("/posts/{postId}/comments")

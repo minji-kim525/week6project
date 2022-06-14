@@ -1,7 +1,8 @@
 package com.sparta.week6project.service;
 
-import com.sparta.week6project.dto.responseDto.CommentResponseDto;
 import com.sparta.week6project.dto.requestDto.CommentRequestDto;
+import com.sparta.week6project.dto.responseDto.CommentResponseDto;
+import com.sparta.week6project.dto.responseDto.SignUpResponseDto;
 import com.sparta.week6project.model.Comment;
 import com.sparta.week6project.model.Post;
 import com.sparta.week6project.model.User;
@@ -19,14 +20,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-//    private final ModelMapper modelMapper;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
     // 댓글 생성
-    public void createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
-        // userDetails에는 값이 user 일부분만 있으니 repository에서 userId를 뽑아서 findById 해주기
+    public SignUpResponseDto createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
         User user =userRepository.findById(userDetails.getUser().getId()).orElseThrow(
                 ()-> new NullPointerException("해당 유저가 존재하지 않습니다.")
         );
@@ -35,6 +34,7 @@ public class CommentService {
         );
         Comment comment = new Comment(post, requestDto, user);
         commentRepository.save(comment);
+        return new SignUpResponseDto(true,"댓글이 작성되었습니다");
     }
     // 해당 게시글의 댓글 조회
     public List<CommentResponseDto> readComment(Long postId) {
@@ -52,7 +52,7 @@ public class CommentService {
     }
     // 댓글 삭제
     public void removeComment(Long commentId,UserDetailsImpl userDetails) {
-                // 로그인한 사용자가 해당 댓글의 사용자가 맞는지 확인
+        // 있는 댓글인지 확인
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new NullPointerException("해당 댓글이 존재하지 않습니다")
         );

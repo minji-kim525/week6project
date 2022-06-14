@@ -6,6 +6,7 @@ import com.sparta.week6project.dto.responseDto.PostResponseDto;
 import com.sparta.week6project.security.UserDetailsImpl;
 import com.sparta.week6project.service.PostService;
 import com.sparta.week6project.service.S3Service;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,36 +27,36 @@ public class PostController {
 
     // 게시글 조회
     @GetMapping("/posts/post/{postId}")
-    public PostResponseDto getPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getPost(postId, userDetails.getUser().getId());
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(postService.getPost(postId, userDetails.getUser().getId()));
     }
 
 
     // 게시글 전체 조회
     @GetMapping("/posts")
-    public List<PostResponseDto> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getPosts(userDetails.getUser().getId());
+    public ResponseEntity<List<PostResponseDto>> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(postService.getPosts(userDetails.getUser().getId()));
     }
 
 
     // 작성글 전체 조회
     @GetMapping("/posts/myposts")
-    public List<PostResponseDto> getMyposts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getMyPosts(userDetails.getUser().getId());
+    public ResponseEntity<List<PostResponseDto>> getMyposts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(postService.getMyPosts(userDetails.getUser().getId()));
     }
 
 
     // 좋아요한 게시글 전체 조회
     @GetMapping("/posts/heart")
-    public List<PostResponseDto> getLiedPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getLikedPosts(userDetails.getUser().getId());
+    public ResponseEntity<List<PostResponseDto>> getLiedPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(postService.getLikedPosts(userDetails.getUser().getId()));
     }
 
 
     // 같은 종류 태그 전체 조회
     @GetMapping("/posts/tag")
-    public List<PostResponseDto> getTaggedPosts(@RequestBody TagRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.getTaggedPosts(userDetails.getUser().getId(), requestDto);
+    public ResponseEntity<List<PostResponseDto>> getTaggedPosts(@RequestBody TagRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(postService.getTaggedPosts(userDetails.getUser().getId(), requestDto));
     }
 
     // ================================ 조회 컨트롤러 종료 ===============================
@@ -63,24 +64,29 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/posts/post")
-    public void createBoard(@RequestPart PostDto postDto, @RequestPart MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> createBoard(@RequestPart PostDto postDto, @RequestPart MultipartFile file, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String imagePath = s3Service.upload(file);
         postDto.setImageUrl(imagePath);
         postService.createPost(1L, postDto);
+        return ResponseEntity.ok().build();
     }
 
 
     // 게시글 수정
     @PutMapping("/posts/post/{postId}")
-    public void updateBoard(@PathVariable Long postId, @RequestBody PostDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> updateBoard(@PathVariable Long postId, @RequestBody PostDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        Long userId = userDetails.getUser().getId();
         postService.updatePost(postId, userDetails.getUser().getId(), requestDto);
+        return ResponseEntity.ok().build();
     }
 
 
     // 게시글 삭제
     @DeleteMapping("/posts/post/{postId}")
-    public void deleteBoard(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.deletePost(postId, 1L);
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        Long userId = userDetails.getUser().getId();
+        postService.deletePost(postId, userDetails.getUser().getId());
+        return ResponseEntity.ok().build();
     }
 
 

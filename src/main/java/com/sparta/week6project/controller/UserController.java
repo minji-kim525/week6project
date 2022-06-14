@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping("/user/signup")
     public ResponseEntity<SignUpResponseDto> registerUser(@RequestBody SignUpRequestDto signUpRequestDto){
-        return userService.registerUser(signUpRequestDto);
+        return ResponseEntity.ok().body(userService.registerUser(signUpRequestDto));
     }
 
     @PostMapping("/user/login")
