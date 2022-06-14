@@ -26,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
 
 
-    public ResponseEntity<SignUpResponseDto> registerUser(SignUpRequestDto signUpRequestDto) {
+    public SignUpResponseDto registerUser(SignUpRequestDto signUpRequestDto) {
 
         Optional<User> foundUsername = userRepository.findByUsername(signUpRequestDto.getUsername());
         Optional<User> foundNickname = userRepository.findByNickname(signUpRequestDto.getNickname());
@@ -40,13 +40,12 @@ public class UserService {
                     signUpRequestDto);
 
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new SignUpResponseDto(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-
+            throw e;
         }
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         User user = new User(signUpRequestDto);
         userRepository.save(user);
-        return new ResponseEntity<>(new SignUpResponseDto(true, "회원가입 성공"), HttpStatus.OK);
+        return new SignUpResponseDto(true, "회원가입 성공");
 
     }
 
