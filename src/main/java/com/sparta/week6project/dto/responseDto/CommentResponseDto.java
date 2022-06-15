@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CommentResponseDto {
+    @JsonFormat(pattern ="YYYY-MM-dd HH:mm")
     private LocalDateTime modifiedAt;
     private String nickname;
     private String content;
