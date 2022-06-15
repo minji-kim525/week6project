@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 
 @Component
@@ -36,6 +37,12 @@ public class UserValidator {
     public static void passwordCheackValidator(SignUpRequestDto signupRequestDto) {
         if (!signupRequestDto.getPassword().equals(signupRequestDto.getPasswordCheck())) {
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
+        }
+    }
+// 이메일 형식
+    public static void emailCheackValidator(SignUpRequestDto signupRequestDto) {
+        if (!Pattern.matches("^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$", signupRequestDto.getEmail())) {
+            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
         }
     }
 //        if (signupRequestDto.getPassword().contains(signupRequestDto.getUsername())) {

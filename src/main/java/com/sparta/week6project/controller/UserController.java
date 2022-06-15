@@ -32,8 +32,8 @@ public class UserController {
 
     }
     @PostMapping("/user/signup/duplicate")
-    public ResponseEntity<SignUpResponseDto> duplicationCheck(@RequestBody DuplicationRequestDto duplicationRequestDto){
-        return ResponseEntity.ok().body(userService.duplicationCheck(duplicationRequestDto));
+    public ResponseEntity<SignUpResponseDto> duplicationCheck(@RequestBody SignUpRequestDto signUpRequestDto){
+        return ResponseEntity.ok().body(userService.duplicationCheck(signUpRequestDto));
     }
 
 //    @GetMapping("/user/logout")
