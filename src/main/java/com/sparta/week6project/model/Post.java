@@ -43,7 +43,6 @@ public class Post extends Timestamped {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.imageUrl = requestDto.getImageUrl();
-        this.imageUrl = requestDto.getFileName();
         this.fileName = requestDto.getFileName();
     }
 
