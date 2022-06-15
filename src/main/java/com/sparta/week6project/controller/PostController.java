@@ -37,11 +37,11 @@ public class PostController {
     }
 
 
-    // Infinite Scrolling Pagination
-//    @GetMapping("/posts/pagination")
-//    public ResponseEntity<List<PostResponseDto>> getPostsPages(@RequestBody PagesRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return ResponseEntity.ok().body(postService.getPostsPages(isLogin(userDetails), requestDto));
-//    }
+//     Infinite Scrolling Pagination
+    @GetMapping("/posts/pagination")
+    public ResponseEntity<List<PostResponseDto>> getPostsPages(@RequestBody PagesRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(postService.getPostsPages(isLogin(userDetails), requestDto));
+    }
 
 
     // 작성글 전체 조회
@@ -65,8 +65,6 @@ public class PostController {
     }
 
 
-
-
     // ================================ 조회 컨트롤러 종료 ===============================
 
 
@@ -79,17 +77,6 @@ public class PostController {
         postService.createPost(userDetails.getUser().getId(), requestDto, file);
         return ResponseEntity.ok().build();
     }
-
-
-//    @PostMapping(value = "/posts/post", params = {"postDto" , "file"})
-//    public ResponseEntity<Void> createBoard(
-//            @RequestPart(value = "postDto") PostRequestDto requestDto,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        System.out.println("작동 : 파일 없음");
-//        MultipartFile file = null;
-//        postService.createPost(userDetails.getUser().getId(), requestDto, file);
-//        return ResponseEntity.ok().build();
-//    }
 
 
     // 게시글 수정

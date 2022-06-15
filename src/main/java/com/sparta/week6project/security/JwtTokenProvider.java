@@ -24,7 +24,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     @Value("${jwtSecretKey}")
-    private String secretKey = "rewind";
+    private String secretKey;
 //    public static final String AUTH_HEADER = "X-AUTH-TOKEN";
 public static final String AUTH_HEADER = "Authorization";
     public final HttpServletResponse response;
