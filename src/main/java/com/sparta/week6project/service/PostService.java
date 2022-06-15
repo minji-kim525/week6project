@@ -66,18 +66,18 @@ public class PostService {
     }
 
 //findByIdLessThanAndAuthorInOrderByIdDesc
-//    public List<PostResponseDto> getPostsPages(Long userId, PagesRequestDto requestDto) {
-//        String sortBy = "id";
-//        Sort.Direction direction = Sort.Direction.DESC;
-//        Sort sort = Sort.by(direction, sortBy);
-//        Pageable pageable = PageRequest.of(0, requestDto.getSize(), sort);
-//
-////        PageRequest pageRequest = PageRequest.of(0, size); // 페이지네이션을 위한 PageRequest, 페이지는 0으로 고정한다.
-////        List<Post> posts = postRepository.findByIdLessThanAndAuthorInOrderByIdDesc(requestDto.getLastPostId(), PageRequest.of(0, requestDto.getSize())); // JPA 쿼리 메소드
-//        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
-//
-//        return postListProcess(posts, userId);
-//    }
+    public List<PostResponseDto> getPostsPages(Long userId, PagesRequestDto requestDto) {
+        String sortBy = "id";
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(0, requestDto.getSize(), sort);
+
+//        PageRequest pageRequest = PageRequest.of(0, size); // 페이지네이션을 위한 PageRequest, 페이지는 0으로 고정한다.
+//        List<Post> posts = postRepository.findByIdLessThanAndAuthorInOrderByIdDesc(requestDto.getLastPostId(), PageRequest.of(0, requestDto.getSize())); // JPA 쿼리 메소드
+        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
+
+        return postListProcess(posts, userId);
+    }
 
 
     // 작성글 전체 조회
@@ -131,6 +131,8 @@ public class PostService {
         }
 
         return PostResponseDto.builder()
+                .id(post.getId())
+                .username(post.getUser().getUsername())
                 .nickname(post.getUser().getNickname())
                 .title(post.getTitle())
                 .contents(post.getContent())
@@ -149,10 +151,10 @@ public class PostService {
     // 게시글 작성
     public void createPost(Long userId, PostRequestDto requestDto, MultipartFile file) {
         User user = userRepository.findById(userId).orElseThrow(
-                ()-> new IllegalArgumentException("로그인이 필요합니다.")
+                ()-> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
 
-        if(file == null){
+        if(file.isEmpty()){
             requestDto.setImageUrl(null);
             requestDto.setFileName(null);
         } else {

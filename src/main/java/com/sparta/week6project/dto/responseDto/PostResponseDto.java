@@ -12,6 +12,8 @@ import java.util.List;
 @Builder
 public class PostResponseDto {
 
+    private Long id;
+    private String username;
     private String nickname;
     private String title;
     private String contents;
@@ -20,7 +22,6 @@ public class PostResponseDto {
     private LocalDateTime modifiedAt;
     private Long heart;
     private Boolean isHeart;
-//    private List<TagDto> tags;
     private List<TagMapping> tags;
 
 }
