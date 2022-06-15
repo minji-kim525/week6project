@@ -71,21 +71,17 @@ public class UserService {
 
     // 중복 체크
     public SignUpResponseDto duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
-        try {
 
-            if (userRepository.existsByUsername(duplicationRequestDto.getUsername())) {
-                throw new IllegalArgumentException("중복된 아이디가 존재합니다.");
-            }
-            if (userRepository.existsByNickname(duplicationRequestDto.getNickname())) {
-                throw new IllegalArgumentException("중복된 닉네임이 존재합니다.");
-            }
-            if (userRepository.existsByEmail(duplicationRequestDto.getEmail())) {
-                throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
-            }
-
-        } catch (IllegalArgumentException e) {
-            throw e;
+        if (userRepository.existsByUsername(duplicationRequestDto.getUsername())) {
+            throw new IllegalArgumentException("중복된 아이디가 존재합니다.");
         }
+        if (userRepository.existsByNickname(duplicationRequestDto.getNickname())) {
+            throw new IllegalArgumentException("중복된 닉네임이 존재합니다.");
+        }
+        if (userRepository.existsByEmail(duplicationRequestDto.getEmail())) {
+            throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
+        }
+
         return new SignUpResponseDto(true, "중복확인 완료");
         }
 }
