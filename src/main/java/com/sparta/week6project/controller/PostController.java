@@ -1,5 +1,6 @@
 package com.sparta.week6project.controller;
 
+import com.sparta.week6project.dto.requestDto.PagesRequestDto;
 import com.sparta.week6project.dto.requestDto.PostRequestDto;
 import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
@@ -32,11 +33,15 @@ public class PostController {
     // 게시글 전체 조회
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails == null){
-            return ResponseEntity.ok().body(postService.getPosts(0L));
-        }
         return ResponseEntity.ok().body(postService.getPosts(isLogin(userDetails)));
     }
+
+
+    // Infinite Scrolling Pagination
+//    @GetMapping("/posts/pagination")
+//    public ResponseEntity<List<PostResponseDto>> getPostsPages(@RequestBody PagesRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return ResponseEntity.ok().body(postService.getPostsPages(isLogin(userDetails), requestDto));
+//    }
 
 
     // 작성글 전체 조회
@@ -59,12 +64,15 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getTaggedPosts(isLogin(userDetails), requestDto));
     }
 
+
+
+
     // ================================ 조회 컨트롤러 종료 ===============================
 
 
     // 게시글 작성
     @PostMapping("/posts/post")
-    public ResponseEntity<Void> createBoard(
+    public ResponseEntity<Void> createPost(
             @RequestPart(value = "postDto") PostRequestDto requestDto,
             @RequestPart(value = "file") MultipartFile file,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -73,12 +81,23 @@ public class PostController {
     }
 
 
+//    @PostMapping(value = "/posts/post", params = {"postDto" , "file"})
+//    public ResponseEntity<Void> createBoard(
+//            @RequestPart(value = "postDto") PostRequestDto requestDto,
+//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        System.out.println("작동 : 파일 없음");
+//        MultipartFile file = null;
+//        postService.createPost(userDetails.getUser().getId(), requestDto, file);
+//        return ResponseEntity.ok().build();
+//    }
+
+
     // 게시글 수정
     @PutMapping("/posts/post/{postId}")
-    public ResponseEntity<Void> updateBoard(
-            @PathVariable Long postId,
+    public ResponseEntity<Void> updatePost2(
             @RequestPart(value = "postDto") PostRequestDto requestDto,
             @RequestPart(value = "file") MultipartFile file,
+            @PathVariable Long postId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.updatePost(postId, userDetails.getUser().getId(), requestDto, file);
         return ResponseEntity.ok().build();
@@ -87,7 +106,7 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/posts/post/{postId}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.deletePost(postId, userDetails.getUser().getId());
         return ResponseEntity.ok().build();
     }

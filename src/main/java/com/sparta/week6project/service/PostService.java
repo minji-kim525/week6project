@@ -1,5 +1,6 @@
 package com.sparta.week6project.service;
 
+import com.sparta.week6project.dto.requestDto.PagesRequestDto;
 import com.sparta.week6project.dto.requestDto.PostRequestDto;
 import com.sparta.week6project.dto.requestDto.TagRequestDto;
 import com.sparta.week6project.dto.responseDto.PostResponseDto;
@@ -9,6 +10,9 @@ import com.sparta.week6project.model.Tag;
 import com.sparta.week6project.model.User;
 import com.sparta.week6project.repository.*;
 import com.sparta.week6project.repository.mapping.PostMapping;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +64,20 @@ public class PostService {
         List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
         return postListProcess(posts, userId);
     }
+
+//findByIdLessThanAndAuthorInOrderByIdDesc
+//    public List<PostResponseDto> getPostsPages(Long userId, PagesRequestDto requestDto) {
+//        String sortBy = "id";
+//        Sort.Direction direction = Sort.Direction.DESC;
+//        Sort sort = Sort.by(direction, sortBy);
+//        Pageable pageable = PageRequest.of(0, requestDto.getSize(), sort);
+//
+////        PageRequest pageRequest = PageRequest.of(0, size); // 페이지네이션을 위한 PageRequest, 페이지는 0으로 고정한다.
+////        List<Post> posts = postRepository.findByIdLessThanAndAuthorInOrderByIdDesc(requestDto.getLastPostId(), PageRequest.of(0, requestDto.getSize())); // JPA 쿼리 메소드
+//        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
+//
+//        return postListProcess(posts, userId);
+//    }
 
 
     // 작성글 전체 조회
@@ -134,7 +152,12 @@ public class PostService {
                 ()-> new IllegalArgumentException("로그인이 필요합니다.")
         );
 
-        requestDto.setImageUrlAndFileName(s3Service.upload(file));
+        if(file == null){
+            requestDto.setImageUrl(null);
+            requestDto.setFileName(null);
+        } else {
+            requestDto.setImageUrlAndFileName(s3Service.upload(file));
+        }
 
         Post post = postRepository.save(new Post(user, requestDto));
         if(!requestDto.getTags().isEmpty()) {
@@ -164,9 +187,11 @@ public class PostService {
         post.update(requestDto);
 
         // 태그 초기화 후 새로 등록
-        tagRepository.deleteAllByPostId(postId);
-        for(TagRequestDto tagRequestDto : requestDto.getTags()){
-            tagRepository.save(new Tag(post, tagRequestDto));
+        if(requestDto.getTags().size()!=0){
+            tagRepository.deleteAllByPostId(postId);
+            for(TagRequestDto tagRequestDto : requestDto.getTags()){
+                tagRepository.save(new Tag(post, tagRequestDto));
+            }
         }
 
     }
@@ -192,6 +217,7 @@ public class PostService {
         postRepository.deleteById(postId);
 
     }
+
 
 
 }

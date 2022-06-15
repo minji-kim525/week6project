@@ -31,12 +31,11 @@ public class UserService {
             Optional<User> foundEmail = userRepository.findByEmail(signUpRequestDto.getEmail());
 
             try {
+                //중복 체크
                 UserValidator.idDuplicationValidator(foundUsername);
                 UserValidator.nicknameDuplicationValidator(foundNickname);
                 UserValidator.emailDuplicationValidator(foundEmail);
-                UserValidator.idCheackValidator(signUpRequestDto);
-                UserValidator.emailCheackValidator(signUpRequestDto);
-                UserValidator.nicknameCheackValidator(signUpRequestDto);
+                //패스워드 일치 체크
                 UserValidator.passwordCheackValidator(signUpRequestDto);
 
             } catch (IllegalArgumentException e) {
@@ -48,9 +47,8 @@ public class UserService {
             try {
                 UserValidator.idDuplicationValidator(foundUsername);
                 UserValidator.nicknameDuplicationValidator(foundNickname);
-                UserValidator.idCheackValidator(signUpRequestDto);
-                UserValidator.nicknameCheackValidator(signUpRequestDto);
                 UserValidator.passwordCheackValidator(signUpRequestDto);
+
             } catch (IllegalArgumentException e) {
                 throw e;
             }
