@@ -1,6 +1,7 @@
 package com.sparta.week6project.validator;
 
 import com.sparta.week6project.dto.requestDto.LoginRequestDto;
+import com.sparta.week6project.dto.requestDto.SignUpRequestDto;
 import com.sparta.week6project.exception.LoginIdNotValidException;
 import com.sparta.week6project.exception.LoginPasswordNotValidException;
 import com.sparta.week6project.model.User;
@@ -29,6 +30,12 @@ public class UserValidator {
     public static void emailDuplicationValidator(Optional<User> foundEmail) {
         if (foundEmail.isPresent()) {
             throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
+        }
+    }
+
+    public static void passwordCheackValidator(SignUpRequestDto signupRequestDto) {
+        if (!signupRequestDto.getPassword().equals(signupRequestDto.getPasswordCheck())) {
+            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
     }
 //        if (signupRequestDto.getPassword().contains(signupRequestDto.getUsername())) {
