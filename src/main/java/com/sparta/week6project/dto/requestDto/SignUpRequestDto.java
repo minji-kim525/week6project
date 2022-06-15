@@ -25,7 +25,7 @@ public class SignUpRequestDto {
     private String passwordCheck;
     private String profileImage;
 
-    @Email(message="이메일 형식이 올바르지 않습니다.")// @Email은 null 허용, 빈문자열 "" true , 공백" " false
+    // @Email은 null 허용, 빈문자열 "" true , 공백" " false
     private String email;
 
     @NotNull

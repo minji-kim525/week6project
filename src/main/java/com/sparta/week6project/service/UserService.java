@@ -35,6 +35,7 @@ public class UserService {
                 UserValidator.idDuplicationValidator(foundUsername);
                 UserValidator.nicknameDuplicationValidator(foundNickname);
                 UserValidator.emailDuplicationValidator(foundEmail);
+                UserValidator.emailCheackValidator(signUpRequestDto);
                 //패스워드 일치 체크
                 UserValidator.passwordCheackValidator(signUpRequestDto);
 
@@ -70,17 +71,14 @@ public class UserService {
     }
 
     // 중복 체크
-    public SignUpResponseDto duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
+    public SignUpResponseDto duplicationCheck(SignUpRequestDto signUpRequestDto) {
+        Optional<User> foundUsername = userRepository.findByUsername(signUpRequestDto.getUsername());
+        Optional<User> foundNickname = userRepository.findByNickname(signUpRequestDto.getNickname());
+        Optional<User> foundEmail = userRepository.findByEmail(signUpRequestDto.getEmail());
 
-        if (userRepository.existsByUsername(duplicationRequestDto.getUsername())) {
-            throw new IllegalArgumentException("중복된 아이디가 존재합니다.");
-        }
-        if (userRepository.existsByNickname(duplicationRequestDto.getNickname())) {
-            throw new IllegalArgumentException("중복된 닉네임이 존재합니다.");
-        }
-        if (userRepository.existsByEmail(duplicationRequestDto.getEmail())) {
-            throw new IllegalArgumentException("중복된 이메일이 존재합니다.");
-        }
+        UserValidator.idDuplicationValidator(foundUsername);
+        UserValidator.nicknameDuplicationValidator(foundNickname);
+        UserValidator.emailDuplicationValidator(foundEmail);
 
         return new SignUpResponseDto(true, "중복확인 완료");
         }
