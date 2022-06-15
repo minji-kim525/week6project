@@ -44,10 +44,11 @@ public class CommentService {
         List<CommentResponseDto> commentList = new ArrayList<>();
         if(!comments.isEmpty()) {
             for (int i=0; i<comments.size(); i++) {
+                Long id = comments.get(i).getId();
                 String name = comments.get(i).getUser().getNickname();
                 String content = comments.get(i).getContent();
                 LocalDateTime modifiedAt = comments.get(i).getModifiedAt();
-                commentList.add(new CommentResponseDto(name, content, modifiedAt));
+                commentList.add(new CommentResponseDto(id, name, content, modifiedAt));
             }
         }
         return commentList;
