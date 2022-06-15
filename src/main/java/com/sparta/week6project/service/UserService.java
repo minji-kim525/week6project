@@ -34,10 +34,6 @@ public class UserService {
                 UserValidator.idDuplicationValidator(foundUsername);
                 UserValidator.nicknameDuplicationValidator(foundNickname);
                 UserValidator.emailDuplicationValidator(foundEmail);
-                UserValidator.idCheackValidator(signUpRequestDto);
-                UserValidator.emailCheackValidator(signUpRequestDto);
-                UserValidator.nicknameCheackValidator(signUpRequestDto);
-                UserValidator.passwordCheackValidator(signUpRequestDto);
 
             } catch (IllegalArgumentException e) {
                 throw e;
@@ -48,9 +44,7 @@ public class UserService {
             try {
                 UserValidator.idDuplicationValidator(foundUsername);
                 UserValidator.nicknameDuplicationValidator(foundNickname);
-                UserValidator.idCheackValidator(signUpRequestDto);
-                UserValidator.nicknameCheackValidator(signUpRequestDto);
-                UserValidator.passwordCheackValidator(signUpRequestDto);
+
             } catch (IllegalArgumentException e) {
                 throw e;
             }
