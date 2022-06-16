@@ -71,14 +71,14 @@ public class UserService {
     }
 
     // 중복 체크
-    public SignUpResponseDto duplicationCheck(SignUpRequestDto signUpRequestDto) {
-        Optional<User> foundUsername = userRepository.findByUsername(signUpRequestDto.getUsername());
-        Optional<User> foundNickname = userRepository.findByNickname(signUpRequestDto.getNickname());
-        Optional<User> foundEmail = userRepository.findByEmail(signUpRequestDto.getEmail());
+    public SignUpResponseDto duplicationCheck(DuplicationRequestDto duplicationRequestDto) {
+        Optional<User> foundUsername = userRepository.findByUsername(duplicationRequestDto.getUsername());
+//        Optional<User> foundNickname = userRepository.findByNickname(signUpRequestDto.getNickname());
+//        Optional<User> foundEmail = userRepository.findByEmail(signUpRequestDto.getEmail());
 
         UserValidator.idDuplicationValidator(foundUsername);
-        UserValidator.nicknameDuplicationValidator(foundNickname);
-        UserValidator.emailDuplicationValidator(foundEmail);
+//        UserValidator.nicknameDuplicationValidator(foundNickname);
+//        UserValidator.emailDuplicationValidator(foundEmail);
 
         return new SignUpResponseDto(true, "중복확인 완료");
         }

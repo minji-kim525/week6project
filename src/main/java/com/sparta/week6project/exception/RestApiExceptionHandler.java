@@ -3,9 +3,7 @@ package com.sparta.week6project.exception;
 
 import com.sparta.week6project.dto.responseDto.ErrorResponseDto;
 import com.sparta.week6project.dto.responseDto.LoginResponseDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

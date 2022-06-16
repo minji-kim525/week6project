@@ -21,7 +21,7 @@ public class CommentController {
     // 댓글 작성
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<SignUpResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(commentService.createComment(postId, requestDto, userDetails)); // 200, ok 가 가나?
+        return ResponseEntity.ok().body(commentService.createComment(postId, requestDto, userDetails));
     }
     // 댓글 조회
     @GetMapping("/posts/{postId}/comments")
