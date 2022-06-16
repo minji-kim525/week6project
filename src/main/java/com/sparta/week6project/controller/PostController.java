@@ -37,7 +37,7 @@ public class PostController {
     }
 
 
-//     Infinite Scrolling Pagination
+    // Infinite Scrolling Pagination
     @GetMapping("/posts/pagination")
     public ResponseEntity<List<PostResponseDto>> getPostsPages(@RequestBody PagesRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(postService.getPostsPages(isLogin(userDetails), requestDto));

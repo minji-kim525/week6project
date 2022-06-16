@@ -22,4 +22,9 @@ public class PostRequestDto {
         this.imageUrl = requestDto.getImageUrl();
         this.fileName = requestDto.getFileName();
     }
+
+    public void setImageUrlAndFileName(String imageUrl, String fileName) {
+        this.imageUrl = imageUrl;
+        this.fileName = fileName;
+    }
 }

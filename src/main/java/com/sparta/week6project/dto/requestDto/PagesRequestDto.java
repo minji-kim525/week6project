@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PagesRequestDto {
 
-    private Long lastPostId;
+    private int page;
     private int size;
 
 }

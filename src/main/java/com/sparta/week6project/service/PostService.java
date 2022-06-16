@@ -11,7 +11,6 @@ import com.sparta.week6project.model.User;
 import com.sparta.week6project.repository.*;
 import com.sparta.week6project.repository.mapping.PostMapping;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,16 +64,12 @@ public class PostService {
         return postListProcess(posts, userId);
     }
 
-//findByIdLessThanAndAuthorInOrderByIdDesc
-    public List<PostResponseDto> getPostsPages(Long userId, PagesRequestDto requestDto) {
-        String sortBy = "id";
-        Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(0, requestDto.getSize(), sort);
 
-//        PageRequest pageRequest = PageRequest.of(0, size); // 페이지네이션을 위한 PageRequest, 페이지는 0으로 고정한다.
-//        List<Post> posts = postRepository.findByIdLessThanAndAuthorInOrderByIdDesc(requestDto.getLastPostId(), PageRequest.of(0, requestDto.getSize())); // JPA 쿼리 메소드
-        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
+    // Infinite Scrolling Pagination
+    public List<PostResponseDto> getPostsPages(Long userId, PagesRequestDto requestDto) {
+
+        PageRequest sortedByModifiedAtDesc = PageRequest.of(requestDto.getPage(), requestDto.getSize(), Sort.by("modifiedAt").descending()); // 페이지 정렬 셋팅
+        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc(sortedByModifiedAtDesc).getContent();
 
         return postListProcess(posts, userId);
     }
@@ -179,14 +174,21 @@ public class PostService {
             throw new NullPointerException("존재하지 않는 글입니다.");
         }
 
-        // 기존 Url 삭제
-        s3Service.deleteImageUrl(post.getFileName());
+
 
         // 새 파일 등록
-        requestDto.setImageUrlAndFileName(s3Service.upload(file));
+        if(!file.isEmpty()){
+            // 기존 Url 삭제
+            s3Service.deleteImageUrl(post.getFileName());
+            requestDto.setImageUrlAndFileName(s3Service.upload(file));
+        } else {
+            requestDto.setImageUrlAndFileName(post.getImageUrl(), post.getFileName());
+        }
+
 
         // DB 업데이트
         post.update(requestDto);
+
 
         // 태그 초기화 후 새로 등록
         if(requestDto.getTags().size()!=0){
