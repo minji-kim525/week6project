@@ -40,7 +40,7 @@ public class CommentService {
     public List<CommentResponseDto> readComment(Long postId) {
         // 댓글들 중 게시글id가 넘어온 postId와 같은 값들을 (수정시간기준 내림차순으로) 가져온다.
         List<Comment> comments = commentRepository.findAllByPost_IdOrderByModifiedAtDesc(postId);
-        // comment 작성자닉네임 , 수정시간, 댓글 내용
+        // commentId, 작성자닉네임 , 수정시간, 댓글 내용
         List<CommentResponseDto> commentList = new ArrayList<>();
         if(!comments.isEmpty()) {
             for (int i=0; i<comments.size(); i++) {

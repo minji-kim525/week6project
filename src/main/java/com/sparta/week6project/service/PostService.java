@@ -178,12 +178,15 @@ public class PostService {
         if(post == null){
             throw new NullPointerException("존재하지 않는 글입니다.");
         }
-
-        // 기존 Url 삭제
-        s3Service.deleteImageUrl(post.getFileName());
-
         // 새 파일 등록
-        requestDto.setImageUrlAndFileName(s3Service.upload(file));
+        if(!file.isEmpty()) {
+            // 기존 Url 삭제
+            s3Service.deleteImageUrl(post.getFileName());
+            requestDto.setImageUrlAndFileName(s3Service.upload(file));
+        } else {
+            requestDto.setImageUrlAndFileName(post.getImageUrl(),post.getFileName());
+        }
+
 
         // DB 업데이트
         post.update(requestDto);
