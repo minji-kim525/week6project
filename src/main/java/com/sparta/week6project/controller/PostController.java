@@ -38,6 +38,7 @@ public class PostController {
 
 
     // Infinite Scrolling Pagination
+    // 조회 기능에 적용전
     @GetMapping("/posts/pagination")
     public ResponseEntity<List<PostResponseDto>> getPostsPages(@RequestBody PagesRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(postService.getPostsPages(isLogin(userDetails), requestDto));
