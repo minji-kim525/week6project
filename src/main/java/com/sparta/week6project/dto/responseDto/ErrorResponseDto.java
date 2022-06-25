@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ErrorResponseDto {
 //    String token;
-    private boolean ok;
+    private boolean success;
     private String message;
 
 //    public ErrorResponseDto (boolean ok, String message) {
