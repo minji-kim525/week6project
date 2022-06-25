@@ -64,6 +64,12 @@ public class PostService {
         return postListProcess(posts, userId);
     }
 
+    // [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    // size = 3 : page = 0 [10, 9, 8], page = 1 [7, 6, 5], page = 2 [4, 3, 2], page = 3 [1]
+
+    // [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    // size = 3 : page = 0 [11, 10, 9], page = 1 [8, 7, 6], page = 2 [5, 4, 3], page = 3 [2, 1]
+
 
     // Infinite Scrolling Pagination
     public List<PostResponseDto> getPostsPages(Long userId, PagesRequestDto requestDto) {

@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PagesRequestDto {
 
-    private int page;
-    private int size;
+    private int page; // 필요 페이지 번호
+    private int size; // 한 페이지당 게시글 수
 
 }

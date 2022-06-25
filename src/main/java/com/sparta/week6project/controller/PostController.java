@@ -100,6 +100,7 @@ public class PostController {
     }
 
 
+
     // 로그인 확인
     private Long isLogin(UserDetailsImpl userDetails){
         if(userDetails == null)return 0L;
